@@ -6,11 +6,16 @@ algo=$1
 # envs=("BipedalWalker-v3")
 # envs=("HalfCheetah-v3")
 # envs=("Hopper-v3")
-seeds=(0 1 2 3 4)
+seeds=(0)
+# 现在是　Delayed Env
+envs=("HalfCheetah-v3")
+# "Ant-v3" "Humanoid-v3" "Walker2d-v3")
 # envs=("Walker2d-v3")
+# envs=("Humanoid-v3")
 # envs=("Ant-v3")
 # envs=("Swimmer-v3")
 # envs=("Humanoid-v3")
+# envs=("AntBulletEnv-v0" "Walker2DBulletEnv-v0")
 
 # envs=("HalfCheetahBulletEnv-v0")
 # envs=("AntBulletEnv-v0")
@@ -29,9 +34,9 @@ seeds=(0 1 2 3 4)
 # seed 1 173 174 175 176
 for env in ${envs[@]}; do
     for seed in ${seeds[@]}; do
-            python -m baselines.ppo2.run_mujoco_sil \
-                --env $env \
-                --seed $seed \
+        python -m baselines.ppo2.run_mujoco \
+            --env $env \
+            --seed $seed
     done
 done
 

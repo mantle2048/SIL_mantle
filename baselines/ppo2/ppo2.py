@@ -92,6 +92,13 @@ class Runner(AbstractEnvRunner):
         self.lam = lam
         self.gamma = gamma
 
+        # For Delayed Env--------------------------------------
+        self.reward_freq = 20
+        nenv = env.num_envs
+        self.delay_r_ex = np.zeros([nenv])
+        self.delay_step = np.zeros([nenv])
+        # For Delayed Env--------------------------------------
+
     def run(self):
         mb_obs, mb_rewards, mb_actions, mb_values, mb_dones, mb_neglogpacs = [],[],[],[],[],[]
         mb_states = self.states
@@ -104,6 +111,18 @@ class Runner(AbstractEnvRunner):
             mb_neglogpacs.append(neglogpacs)
             mb_dones.append(self.dones)
             self.obs[:], rewards, self.dones, infos = self.env.step(actions)
+
+            # For Delayed Env--------------------------------------
+            self.delay_r_ex += rewards
+            self.delay_step += 1
+            for n, done in enumerate(self.dones):
+                if done or self.delay_step[n] == self.reward_freq:
+                    rewards[n] = self.delay_r_ex[n]
+                    self.delay_r_ex[n] = self.delay_step[n] = 0
+                else:
+                    rewards[n] = 0
+            # For Delayed Env--------------------------------------
+
             for info in infos:
                 maybeepinfo = info.get('episode')
                 if maybeepinfo: epinfos.append(maybeepinfo)

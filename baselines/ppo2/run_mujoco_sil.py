@@ -2,6 +2,7 @@
 import numpy as np
 from baselines.common.cmd_util import mujoco_arg_parser, arg_parser
 from baselines import bench, logger
+import pybullet_envs
 import os
 
 
@@ -73,10 +74,16 @@ def main():
 
     args.dir = os.path.join('data',relpath, subfolder)
     logger.configure(args.dir)
-    model, env = train(args.env, num_timesteps=args.num_timesteps, seed=args.seed,
-            lr=args.lr,
-            sil_update=args.sil_update, sil_value=args.sil_value,
-            sil_alpha=args.sil_alpha, sil_beta=args.sil_beta)
+    model, env = train(
+        args.env,
+        num_timesteps=args.num_timesteps,
+        seed=args.seed,
+        lr=args.lr,
+        sil_update=args.sil_update,
+        sil_value=args.sil_value,
+        sil_alpha=args.sil_alpha,
+        sil_beta=args.sil_beta
+    )
 
     if args.play:
         logger.log("Running trained model")
